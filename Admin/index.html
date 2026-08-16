@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Angkor AI — Admin Panel</title>
+  <link rel="stylesheet" href="admin-style.css" />
+
+  <!--
+    URL plan: angkor.ai/admin_panel (served via express.static('admin')
+    mounted at /admin_panel in server.js — already wired in skeleton)
+
+    TODO STRUCTURE PLAN (not built yet):
+    1. Admin-only login (separate check: is_admin=true in users table)
+    2. Dashboard: total students, messages today, most-used tool
+    3. Students table: list all registered students (email, grade, join date)
+    4. Conversations viewer: read chat logs (for quality/safety review)
+    5. Tool usage stats: how many school searches, scholarship searches, etc.
+  -->
+</head>
+<body>
+  <div id="adminApp">
+    <!-- TODO: admin login screen -->
+    <!-- TODO: dashboard once logged in -->
+  </div>
+
+  <script src="admin-script.js"></script>
+</body>
+</html>
