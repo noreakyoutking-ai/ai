@@ -1,0 +1,25 @@
+{
+  "name": "angkor-ai",
+  "version": "1.0.0",
+  "description": "Angkor AI — AI study assistant for Cambodian students (Grade 12 focus)",
+  "main": "server.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.32.1",
+    "express": "^4.21.1",
+    "dotenv": "^16.4.5",
+    "cors": "^2.8.5",
+    "better-sqlite3": "^11.6.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "google-auth-library": "^9.14.2",
+    "pdfkit": "^0.15.1",
+    "docx": "^9.1.0"
+  }
+}
