@@ -1,0 +1,5 @@
+/* ANGKOR AI — Admin Panel Stylesheet (SKELETON) */
+/* TODO: match main app theme, simpler/more data-table focused layout */
+
+* { box-sizing: border-box; }
+body { margin: 0; font-family: system-ui, sans-serif; }
