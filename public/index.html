@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="km">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Angkor AI — ជំនួយការសិក្សាសម្រាប់និស្សិតកម្ពុជា</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Kantumruy+Pro:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+
+<!-- Google Sign In — Client ID below is the one already created in Google Cloud Console -->
+<meta name="google-client-id" content="1030345958332-5dct2l4p90i64phsquoimoulrcja2d6c.apps.googleusercontent.com" />
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+
+  <!-- 3D scene canvas — glowing tiered spire + ember particles (original abstract shape) -->
+  <canvas id="scene"></canvas>
+  <div class="veil"></div>
+
+  <div class="page">
+
+    <header class="top">
+      <div class="wordmark">
+        <span class="wm-main">ANGKOR</span><span class="wm-sub">AI</span>
+      </div>
+      <div class="lang-toggle" id="langToggle">
+        <button class="lang-btn" data-lang="km">ខ្មែរ</button>
+        <button class="lang-btn" data-lang="en">EN</button>
+      </div>
+    </header>
+
+    <main class="hero">
+      <div class="copy">
+        <div class="eyebrow" data-i18n="eyebrow">សម្រាប់និស្សិត Grade 12 កម្ពុជា</div>
+        <h1 class="headline" data-i18n="headline">ផ្លូវទៅសាកលវិទ្យាល័យ<br/>ចាប់ផ្តើមនៅទីនេះ</h1>
+        <p class="subhead" data-i18n="subhead">
+          ស្វែងរកសាលារៀន, អាហារូបករណ៍, ដោះស្រាយលំហាត់ និងត្រៀមប្រឡង — ជាមួយ AI ដែលយល់ពីនិស្សិតកម្ពុជា។
+        </p>
+        <div class="pillars">
+          <div class="pillar">
+            <span class="pillar-mark">01</span>
+            <span data-i18n="pillar1">ស្វែងរកសាលា + អាហារូបករណ៍</span>
+          </div>
+          <div class="pillar">
+            <span class="pillar-mark">02</span>
+            <span data-i18n="pillar2">ជួយលំហាត់ជាភាសាខ្មែរ</span>
+          </div>
+          <div class="pillar">
+            <span class="pillar-mark">03</span>
+            <span data-i18n="pillar3">ត្រៀមប្រឡងតាមឆ្នាំមុនៗ</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="auth-card">
+        <div class="auth-tabs">
+          <button class="auth-tab active" id="tabLogin" data-i18n="signIn">ចូលគណនី</button>
+          <button class="auth-tab" id="tabSignup" data-i18n="signUp">បង្កើតគណនី</button>
+        </div>
+
+        <form class="auth-form" id="authForm">
+          <input type="text" id="authName" class="auth-input" data-i18n-placeholder="namePlaceholder" placeholder="ឈ្មោះរបស់អ្នក" style="display:none;" />
+          <input type="email" id="authEmail" class="auth-input" placeholder="Email" required />
+
+          <input type="password" id="authPassword" class="auth-input" placeholder="Password" required minlength="8" />
+          <div class="pw-requirements" id="pwRequirements" style="display:none;">
+            <span class="pw-req" data-req="length" data-i18n="pwLen">យ៉ាងតិច ៨ តួអក្សរ</span>
+            <span class="pw-req" data-req="upper" data-i18n="pwUpper">អក្សរធំ (A-Z)</span>
+            <span class="pw-req" data-req="lower" data-i18n="pwLower">អក្សរតូច (a-z)</span>
+            <span class="pw-req" data-req="number" data-i18n="pwNumber">លេខ (0-9)</span>
+          </div>
+
+          <input type="password" id="authConfirm" class="auth-input" data-i18n-placeholder="confirmPlaceholder" placeholder="បញ្ជាក់ Password" required minlength="8" style="display:none;" />
+
+          <label class="grade-select" id="gradeWrap" style="display:none;">
+            <span data-i18n="gradeLabel">កម្រិតថ្នាក់</span>
+            <select id="authGrade" class="auth-input">
+              <option value="12" data-i18n="grade12">ថ្នាក់ទី ១២</option>
+              <option value="11" data-i18n="grade11">ថ្នាក់ទី ១១</option>
+              <option value="10" data-i18n="grade10">ថ្នាក់ទី ១០</option>
+              <option value="other" data-i18n="gradeOther">ផ្សេងទៀត</option>
+            </select>
+          </label>
+
+          <button type="submit" class="auth-submit" id="authSubmit" data-i18n="signIn">ចូលគណនី</button>
+          <div class="auth-error" id="authError"></div>
+        </form>
+
+        <div class="auth-divider"><span data-i18n="orDivider">ឬ</span></div>
+
+        <button type="button" class="google-btn" id="googleBtn">
+          <svg class="google-icon" viewBox="0 0 18 18" width="18" height="18">
+            <path fill="#4285F4" d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84c-.21 1.13-.84 2.09-1.8 2.73v2.27h2.91c1.7-1.57 2.69-3.87 2.69-6.64z"/>
+            <path fill="#34A853" d="M9 18c2.43 0 4.47-.8 5.96-2.17l-2.91-2.27c-.81.54-1.84.86-3.05.86-2.34 0-4.32-1.58-5.03-3.71H.96v2.34C2.44 15.98 5.48 18 9 18z"/>
+            <path fill="#FBBC05" d="M3.97 10.71A5.4 5.4 0 013.68 9c0-.59.1-1.17.29-1.71V4.95H.96A9 9 0 000 9c0 1.45.35 2.83.96 4.05l3.01-2.34z"/>
+            <path fill="#EA4335" d="M9 3.58c1.32 0 2.51.45 3.44 1.35l2.58-2.58C13.46.89 11.43 0 9 0 5.48 0 2.44 2.02.96 4.95l3.01 2.34C4.68 5.16 6.66 3.58 9 3.58z"/>
+          </svg>
+          <span data-i18n="googleBtn">បន្តជាមួយ Google</span>
+        </button>
+
+        <div class="auth-note" data-i18n="authNote">
+          ឥតគិតថ្លៃសម្រាប់និស្សិត — ត្រូវការតែ email ប៉ុណ្ណោះ
+        </div>
+      </div>
+    </main>
+
+    <footer class="foot">
+      <span data-i18n="footTag">Angkor AI — សាងសង់ឡើងសម្រាប់និស្សិតកម្ពុជា</span>
+    </footer>
+  </div>
+
+  <!-- ============ APP SHELL (chat, shown after sign in) ============ -->
+  <div class="shell" id="appShell" style="display:none;">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand-block">
+        <div class="sun-mark app-mark"><span class="sun-core"></span></div>
+        <div class="brand-text">
+          <div class="brand-name-sm">ANGKOR AI</div>
+        </div>
+        <div class="lang-toggle" id="langToggleApp">
+          <button class="lang-btn" data-lang="km">ខ្មែរ</button>
+          <button class="lang-btn" data-lang="en">EN</button>
+        </div>
+      </div>
+
+      <div class="user-chip">
+        <span class="user-avatar">👤</span>
+        <span class="user-email" id="userEmail"></span>
+        <button class="logout-btn" id="logoutBtn" title="Sign out">⏻</button>
+      </div>
+
+      <div class="side-section">
+        <div class="side-label" data-i18n="toolsLabel">ជំនួយសិក្សា</div>
+        <div class="catalog">
+          <button class="tool-chip" data-prompt-km="ជួយស្វែងរកសាលារៀននៅបរទេសសម្រាប់ខ្ញុំ ដោយសួរអំពី major, budget, GPA របស់ខ្ញុំមុន" data-prompt-en="Help me find schools abroad — ask about my major, budget, and GPA first">
+            <span class="chip-icon">🎓</span> <span data-i18n="toolSchool">ស្វែងរកសាលារៀន</span>
+          </button>
+          <button class="tool-chip" data-prompt-km="ជួយស្វែងរក scholarship ត្រូវនឹងខ្ញុំ សួរខ្ញុំអំពី % scholarship ដែលចង់បាន" data-prompt-en="Help me find scholarships — ask what percentage I'm targeting">
+            <span class="chip-icon">💰</span> <span data-i18n="toolScholar">ស្វែងរក Scholarship</span>
+          </button>
+          <button class="tool-chip" data-prompt-km="ជួយធ្វើលំហាត់នេះជាមួយខ្ញុំ ពន្យល់ជាជំហានៗជាភាសាខ្មែរ: " data-prompt-en="Help me with this homework, step by step in Khmer: ">
+            <span class="chip-icon">🧮</span> <span data-i18n="toolHomework">ជំនួយលំហាត់</span>
+          </button>
+          <button class="tool-chip" data-prompt-km="ស្វែងរក exam past paper សម្រាប់មុខវិជ្ជា: " data-prompt-en="Find past exam papers for subject: ">
+            <span class="chip-icon">📚</span> <span data-i18n="toolExam">Past Exam Papers</span>
+          </button>
+          <button class="tool-chip" id="attachChipApp">
+            <span class="chip-icon">📎</span> <span data-i18n="toolUpload">ភ្ជាប់ File</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="side-section">
+        <div class="side-label-row">
+          <span class="side-label" data-i18n="memoryLabel">អ្វីដែល Angkor AI ចាំ</span>
+          <span class="count-badge" id="memCount">0</span>
+        </div>
+        <div class="memory-list" id="memoryList">
+          <div class="empty-hint" data-i18n="memoryEmpty">មិនទាន់មានអ្វីទេ</div>
+        </div>
+      </div>
+
+      <div class="side-section">
+        <div class="side-label-row">
+          <span class="side-label" data-i18n="filesLabel">File ដែលបានបង្កើត</span>
+          <span class="count-badge" id="fileCount">0</span>
+        </div>
+        <div class="files-list" id="filesList">
+          <div class="empty-hint" data-i18n="filesEmpty">មិនទាន់មាន file ទេ</div>
+        </div>
+      </div>
+
+      <button class="clear-all-btn" id="clearBtn" data-i18n="clearBtn">🗑 សម្អាតការសន្ទនា</button>
+    </aside>
+
+    <main class="main">
+      <header class="chat-topbar">
+        <button class="menu-toggle" id="menuToggle">☰</button>
+        <div class="status-line">
+          <span class="status-dot" id="statusDot"></span>
+          <span id="chatStatus" data-i18n="connecting">កំពុងភ្ជាប់...</span>
+        </div>
+      </header>
+
+      <div class="chat" id="chat">
+        <div class="msg bot">
+          <div class="avatar">☀</div>
+          <div class="bubble" data-i18n="chatWelcome">
+            សួស្តី! ខ្ញុំអាចជួយស្វែងរកសាលារៀន, scholarship, ដោះស្រាយលំហាត់ និងច្រើនទៀត។ សួរបានហើយ!
+          </div>
+        </div>
+      </div>
+
+      <div class="image-preview" id="imagePreview" style="display:none;">
+        <img id="previewImg" src="" alt="preview" />
+        <span id="previewLabel" class="preview-label"></span>
+        <button id="removeImage">✕</button>
+      </div>
+
+      <form class="inputbar" id="chatForm">
+        <label class="attach-btn" title="Upload file">
+          📎
+          <input type="file" id="fileInput" accept="image/*,.pdf,.txt,.csv,.md,.json" hidden />
+        </label>
+        <textarea id="chatInput" data-i18n-placeholder="inputPlaceholder" placeholder="សួរ Angkor AI អ្វីមួយ..." rows="1"></textarea>
+        <button type="submit" id="sendBtn"><span data-i18n="sendBtn">ផ្ញើ</span></button>
+      </form>
+    </main>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
